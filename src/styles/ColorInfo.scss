@@ -1,41 +1,54 @@
 .ColorInfo {
   display: flex;
   flex-direction: column;
-  width: 128px;
+	width: 128px;
   height: 256px;
-  margin: 0 5px; }
-  .ColorInfo .Swatch {
+  margin: 0 5px;
+
+  .Swatch {
     display: flex;
     align-self: flex-end;
     height: 40%;
     width: 100%;
-    margin-bottom: 8px; }
-  .ColorInfo .ColorInputs {
+    margin-bottom: 8px;
+  }
+
+  .ColorInputs {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     width: auto;
     height: 60%;
     padding: 10px 10px;
-    background-color: #3c3c3c; }
-    .ColorInfo .ColorInputs .InputField {
+    background-color: rgb(60,60,60);
+
+    .InputField {
       display: flex;
       flex-direction: row;
       font-size: 12px;
-      color: #c8c8c8; }
-      .ColorInfo .ColorInputs .InputField input {
+      color: rgb(200,200,200);
+
+      input {
         display: flex;
-        background: #646464;
+        background: rgb(100,100,100);
         border: none;
         border-radius: 3px;
-        color: #c8c8c8;
+        color: rgb(200,200,200);
         width: 80%;
-        padding: 5px; }
-        .ColorInfo .ColorInputs .InputField input:focus {
-          outline-width: 0; }
-      .ColorInfo .ColorInputs .InputField span {
+        padding: 5px;
+
+        &:focus {
+          outline-width: 0;
+        }
+      }
+
+      span {
         display: flex;
         align-items: center;
         width: 20%;
         cursor: default;
-        user-select: none; }
+        user-select: none;
+      }
+    }
+  }
+}

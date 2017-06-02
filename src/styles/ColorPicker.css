@@ -1,9 +1,8 @@
 .ColorPicker {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	width: auto;
-	height: auto;
-	background-color: rgb(45, 45, 45);
-	padding: 25px;
-}
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: auto;
+  height: auto;
+  background-color: #2d2d2d;
+  padding: 25px; }

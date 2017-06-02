@@ -4,16 +4,22 @@
   "private": true,
   "dependencies": {
     "react": "^15.5.4",
-    "react-dom": "^15.5.4"
+    "react-dom": "^15.5.4",
+    "radium": "^0.19.1"
   },
   "devDependencies": {
+    "hex-rgb": "*",
+    "node-sass-chokidar": "^0.0.2",
+    "npm-run-all": "^4.0.2",
     "react-scripts": "1.0.5",
-    "rgb-hex": "*",
-    "hex-rgb": "*"
+    "rgb-hex": "*"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build-css": "node-sass-chokidar src/ -o src/",
+    "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
+    "start-js": "react-scripts start",
+    "start": "npm-run-all -p watch-css start-js",
+    "build": "npm run build-css && react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }

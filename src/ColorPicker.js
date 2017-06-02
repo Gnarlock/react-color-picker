@@ -35,9 +35,7 @@ export default class ColorPicker extends Component {
   }
 
   handleHexChange(hex) {
-    const trailingZeros = new Array(6 - hex.length + 1).join("0");
-
-    const rgbValues = hexRgb(hex.concat(trailingZeros));
+    const rgbValues = hexRgb(hex);
     const rgb = {
       r: rgbValues[0],
       g: rgbValues[1],
@@ -54,7 +52,7 @@ export default class ColorPicker extends Component {
 	render() {
 		return (
       <div className="ColorPicker">
-        <Gradient color={this.state.color} />
+        <Gradient color={this.state.color} onRGBChange={this.handleRGBChange} />
         <ColorInfo color={this.state.color} onRGBChange={this.handleRGBChange} onHexChange={this.handleHexChange} />
       </div>
     );

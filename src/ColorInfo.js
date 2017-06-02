@@ -5,31 +5,30 @@ class InputField extends React.Component {
   constructor(props) {
     super(props);
 
+    this.rgbDecimalRegex = RegExp('^[0-9]{0,3}$', 'i');
+    this.rgbHexRegex = RegExp('^[0-9A-F]{0,6}$', 'i');
+
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   handleInputChange(event) {
-    function isValidRGBInput(value) {
-      const rgbValueRegex = /^[0-9]{0,3}$/i;
-      return rgbValueRegex.test(value);
-    }
-    function isValidHexInput(value) {
-      const rgbHexRegex = /^[0-9A-F]{0,6}$/i;
-      return rgbHexRegex.test(value);
+    function isValidInput(value, regex) {
+      return regex.test(value);
     }
     function sanitizeRGBInput(value) {
       return Math.min(Math.max(value, 0), 255); // Clamp value between 0 and 255
     }
     function sanitizeHexInput(value) {
-      return value; // Not sure if anything needs to be done here
+      const trailingZeros = new Array(6 - value.length + 1).join("0");
+      return value.concat(trailingZeros);
     }
 
     const inputValue = event.target.value;
 
     let sanitizedInputValue = null;
-    if (this.props.type === "rgb" && isValidRGBInput(inputValue)) {
+    if (this.props.type === "rgb" && isValidInput(inputValue, this.rgbDecimalRegex)) {
       sanitizedInputValue = sanitizeRGBInput(inputValue);
-    } else if (this.props.type === "hex" && isValidHexInput(inputValue)) {
+    } else if (this.props.type === "hex" && isValidInput(inputValue, this.rgbHexRegex)) {
       sanitizedInputValue = sanitizeHexInput(inputValue);
     } else {
       return;
@@ -42,7 +41,7 @@ class InputField extends React.Component {
   render() {
     return (
       <div className="InputField">
-        <span className="InputFieldLabel">{this.props.label}</span>
+        <span>{this.props.label}</span>
         <input onChange={this.handleInputChange} type="text" value={this.props.value} spellCheck="false"  />
       </div>
     );
