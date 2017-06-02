@@ -38,6 +38,7 @@
   .Slider {
     width: 20px;
     height: 10px;
+    position: relative;
     cursor: grab;
 
     &:active {

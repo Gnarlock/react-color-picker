@@ -83,7 +83,7 @@ class ColorInputs extends React.Component {
 
 export default class ColorInfo extends Component {
   render() {
-    const backgroundColor = `rgb(${this.props.color.rgb.r},${this.props.color.rgb.g},${this.props.color.rgb.b})`;
+    const backgroundColor = `#${this.props.color.hex}`;
 
     return (
       <div className="ColorInfo">
