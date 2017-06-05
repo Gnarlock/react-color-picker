@@ -5,6 +5,7 @@ import ColorInfo from './ColorInfo';
 
 const rgbHex = require('rgb-hex');
 const hexRgb = require('hex-rgb');
+const Color = require('color');
 
 export default class ColorPicker extends Component {
   constructor(props) {

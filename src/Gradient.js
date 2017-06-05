@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './styles/Gradient.css';
 import sliderLine from './images/sliderLine.svg';
 
+const Color = require('color');
+
 class HueSlider extends Component {
   constructor(props) {
     super(props);
@@ -15,9 +17,10 @@ class HueSlider extends Component {
   }
 
   render() {
+    const color = Color(this.props.color.rgb);
     const style = {
       slider: {
-        backgroundColor: `#${this.props.color.rgb}`,
+        backgroundColor: color.rgbString(),
         top: `${this.calculateSliderPosition()}px`
       }
     }
