@@ -3,22 +3,15 @@ import './styles/ColorPicker.css';
 import Gradient from './Gradient';
 import ColorInfo from './ColorInfo';
 
-const rgbHex = require('rgb-hex');
 const hexRgb = require('hex-rgb');
 const Color = require('color');
 
 export default class ColorPicker extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      color: {
-        hex: 'ff0000',
-        rgb: {
-          r: 255,
-          g: 0,
-          b: 0
-        } 
-      }
+      color: Color({r:255, g:0, b:0})
     }
 
     this.handleRGBChange = this.handleRGBChange.bind(this);
@@ -26,28 +19,14 @@ export default class ColorPicker extends Component {
   }
 
   handleRGBChange(rgb) {
-    const hex = rgbHex(rgb.r, rgb.g, rgb.b);
-    const newColor = {
-      hex: hex,
-      rgb: rgb,
-    }
-
-    this.setState({color: newColor});
+    this.setState({color: Color(rgb)});
   }
 
   handleHexChange(hex) {
     const rgbValues = hexRgb(hex);
-    const rgb = {
-      r: rgbValues[0],
-      g: rgbValues[1],
-      b: rgbValues[2]
-    }
-    const newColor = {
-      hex: hex,
-      rgb: rgb
-    }
+    const rgb = {r:rgbValues[0], g:rgbValues[1], b:rgbValues[2]};
 
-    this.setState({color: newColor});
+    this.setState({color: Color(rgb)});
   }
 
 	render() {

@@ -6,12 +6,14 @@ class InputField extends React.Component {
     super(props);
 
     this.rgbDecimalRegex = RegExp('^[0-9]{0,3}$', 'i');
-    this.rgbHexRegex = RegExp('^[0-9A-F]{0,6}$', 'i');
+    this.rgbHexRegex = RegExp('^#[0-9A-F]{0,6}$', 'i');
 
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   handleInputChange(event) {
+    event.preventDefault();
+
     function isValidInput(value, regex) {
       return regex.test(value);
     }
@@ -42,7 +44,7 @@ class InputField extends React.Component {
     return (
       <div className="InputField">
         <span>{this.props.label}</span>
-        <input onChange={this.handleInputChange} type="text" value={this.props.value} spellCheck="false"  />
+        <input onChange={this.handleInputChange} type="text" value={this.props.value || ""} spellCheck="false"  />
       </div>
     );
   }
@@ -58,8 +60,7 @@ class ColorInputs extends React.Component {
 
   handleRGBInputChange(input, value) {
     const channel = input.props.channel;
-
-    let rgb = this.props.color.rgb;
+    let rgb = this.props.color.rgb();
     rgb[channel] = value;
 
     this.props.onRGBChange(rgb);
@@ -72,10 +73,10 @@ class ColorInputs extends React.Component {
   render() {
     return (
       <div className="ColorInputs">
-        <InputField onInputChange={this.handleRGBInputChange} type="rgb" label="R" channel="r" value={this.props.color.rgb.r} />
-        <InputField onInputChange={this.handleRGBInputChange} type="rgb" label="G" channel="g" value={this.props.color.rgb.g} />
-        <InputField onInputChange={this.handleRGBInputChange} type="rgb" label="B" channel="b" value={this.props.color.rgb.b} />
-        <InputField onInputChange={this.handleHexInputChange} type="hex" label="#" key="hex" value={this.props.color.hex} />
+        <InputField onInputChange={this.handleRGBInputChange} type="rgb" label="R" channel="r" value={this.props.color.rgb().r} />
+        <InputField onInputChange={this.handleRGBInputChange} type="rgb" label="G" channel="g" value={this.props.color.rgb().g} />
+        <InputField onInputChange={this.handleRGBInputChange} type="rgb" label="B" channel="b" value={this.props.color.rgb().b} />
+        <InputField onInputChange={this.handleHexInputChange} type="hex" label="#" key="hex" value={this.props.color.hexString()} />
       </div>
     );
   }
@@ -83,11 +84,13 @@ class ColorInputs extends React.Component {
 
 export default class ColorInfo extends Component {
   render() {
-    const backgroundColor = `#${this.props.color.hex}`;
+    const style = {
+      backgroundColor: this.props.color.hslString()
+    }
 
     return (
       <div className="ColorInfo">
-        <div className="Swatch" style={{backgroundColor: backgroundColor}} />
+        <div className="Swatch" style={style} />
         <ColorInputs onRGBChange={this.props.onRGBChange} onHexChange={this.props.onHexChange} color={this.props.color} />
       </div>
     );
