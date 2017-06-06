@@ -33,7 +33,7 @@ class HueSliderBar extends React.Component {
   render() {
     const style = {
       slider: {
-        backgroundColor: this.props.color.rgbString(),
+        backgroundColor: this.props.color.string(),
         top: this.calculateSliderPositionFromHue() + "px"
       }
     }
@@ -59,7 +59,7 @@ class BrightnessGrid extends React.Component {
   render() {
     const styles = {
       brightness: {
-        backgroundColor: this.props.color.rgbString()
+        backgroundColor: this.props.color.string()
       }
     }
 

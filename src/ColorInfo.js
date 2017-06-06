@@ -73,10 +73,10 @@ class ColorInputs extends React.Component {
   render() {
     return (
       <div className="ColorInputs">
-        <InputField onInputChange={this.handleRGBInputChange} type="rgb" label="R" channel="r" value={this.props.color.rgb().r} />
-        <InputField onInputChange={this.handleRGBInputChange} type="rgb" label="G" channel="g" value={this.props.color.rgb().g} />
-        <InputField onInputChange={this.handleRGBInputChange} type="rgb" label="B" channel="b" value={this.props.color.rgb().b} />
-        <InputField onInputChange={this.handleHexInputChange} type="hex" label="#" key="hex" value={this.props.color.hexString()} />
+        <InputField onInputChange={this.handleRGBInputChange} type="rgb" label="R" channel="r" value={this.props.color.red()} />
+        <InputField onInputChange={this.handleRGBInputChange} type="rgb" label="G" channel="g" value={this.props.color.green()} />
+        <InputField onInputChange={this.handleRGBInputChange} type="rgb" label="B" channel="b" value={this.props.color.blue()} />
+        <InputField onInputChange={this.handleHexInputChange} type="hex" label="#" key="hex" value={this.props.color.hex()} />
       </div>
     );
   }
@@ -85,7 +85,7 @@ class ColorInputs extends React.Component {
 export default class ColorInfo extends Component {
   render() {
     const style = {
-      backgroundColor: this.props.color.hslString()
+      backgroundColor: this.props.color.hsl()
     }
 
     return (
