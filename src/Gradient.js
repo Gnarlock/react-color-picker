@@ -10,54 +10,54 @@ class HueSliderBar extends React.Component {
     super(props);
 
     this.state = {
-      position: this.calculateSliderPositionFromHue()
+      position: this.calculateSliderPositionFromCurrentColor()
     }
 
-    this.calculateSliderPositionFromHue = this.calculateSliderPositionFromHue.bind(this);
+    this.calculateSliderPositionFromCurrentColor = this.calculateSliderPositionFromCurrentColor.bind(this);
     this.calculateHueFromSliderPosition = this.calculateHueFromSliderPosition.bind(this);
+    this.updateHue = this.updateHue.bind(this);
     this.handleSliderDrag = this.handleSliderDrag.bind(this);
+    this.handleBarClick = this.handleBarClick.bind(this);
   }
 
-  calculateSliderPositionFromHue() {
-    // Height of slider bar * angle of color on a standard color wheel
+  calculateSliderPositionFromCurrentColor() {
     return Math.round(255 * (this.props.color.hue() / 360));
   }
   calculateHueFromSliderPosition() {
     return Math.round(360 * Math.max(0, Math.min(255, this.state.position)) / 255);
   }
-  handleSliderDrag(event) {
-    const offsetTop = this.slider.offsetTop;
-    const newPosition = this.slider.getBoundingClientRect().top - offsetTop;
-
-    this.setState({position: newPosition })
-    console.log("New position: " + this.state.position);
-
+  updateHue() {
     const newHue = this.calculateHueFromSliderPosition();
     const newColor = Color.hsl(newHue, this.props.color.saturationl(), this.props.color.lightness());
     const rgb = newColor.rgb().array();
-
     this.props.onHueChange(rgb);
   }
 
-  render() {
-    const style = {
-      slider: {
-        backgroundColor: this.props.color.string(),
-        // top: this.calculateSliderPositionFromHue() + "px"
-      }
-    }
+  handleSliderDrag(event) {
+    const newPosition = this.slider.getBoundingClientRect().top - this.slider.offsetTop;
+    this.setState({position: newPosition}, this.updateHue);
+  }
+  handleBarClick(event) {
+    const newPosition = event.pageY - this.bar.offsetTop;
+    this.setState({position: newPosition}, this.updateHue);
+  }
 
+  render() {
     return (
       <div className="HueSliderBar">
-        <div className="Bar" />
+        <div
+          className="Bar"
+          ref={(bar) => {this.bar = bar}}
+          onClick={this.handleBarClick} />
         <Draggable 
           axis="y"
           bounds={{top: 0, bottom: 255}}
+          position={{x: 0, y: this.state.position}}
           onDrag={this.handleSliderDrag} >
           <img
             className="Slider"
             ref={(slider) => {this.slider = slider}}
-            style={style.slider}
+            style={{backgroundColor: this.props.color.string()}}
             src={sliderLine}
             alt="slider" />
         </Draggable>
@@ -68,17 +68,11 @@ class HueSliderBar extends React.Component {
 
 class BrightnessGrid extends React.Component {
   render() {
-    const styles = {
-      brightness: {
-        backgroundColor: this.props.color.string()
-      }
-    }
-
     return (
       <div className="BrightnessGrid">
         <div
           className="Grid"
-          style={styles.brightness} />
+          style={{backgroundColor: this.props.color.string()}} />
         <Draggable
           axis="both" 
           bounds={{left: 0, top: 0, right: 255, bottom: 255}} >

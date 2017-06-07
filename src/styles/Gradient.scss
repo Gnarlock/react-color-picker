@@ -29,24 +29,28 @@
 .HueSliderBar {
 	display: flex;
   flex-shrink: 0;
-	height: 255px;
-	width: 20px;
-  cursor: pointer;
-	background:
-    linear-gradient(to bottom,
-      rgb(255,0,0) 0.0%,
-      rgb(255,255,0) 16.6%,
-      rgb(0,255,0) 33.3%,
-      rgb(0,255,255) 50.0%,
-      rgb(0,0,255) 66.6%,
-      rgb(255,0,255) 83.3%,
-      rgb(255,0,0) 100.0%);
+
+  .Bar {
+    width: 20px;
+    height: 255px;
+    cursor: pointer;
+  	background:
+      linear-gradient(to bottom,
+        rgb(255,0,0) 0.0%,
+        rgb(255,255,0) 16.6%,
+        rgb(0,255,0) 33.3%,
+        rgb(0,255,255) 50.0%,
+        rgb(0,0,255) 66.6%,
+        rgb(255,0,255) 83.3%,
+        rgb(255,0,0) 100.0%);
+  }
 
   .Slider {
     width: 20px;
     height: 5px;
-    position: relative;
+    position: absolute;
     cursor: grab;
+    user-select: none;
 
     &:active {
       cursor: grabbing;
