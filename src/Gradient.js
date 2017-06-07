@@ -2,6 +2,7 @@ import React from 'react';
 import Draggable from 'react-draggable';
 import './styles/Gradient.css';
 import sliderLine from './images/sliderLine.svg';
+import targetIcon from './images/target.png';
 
 const Color = require('color');
 
@@ -74,11 +75,12 @@ class BrightnessGrid extends React.Component {
           className="Grid"
           style={{backgroundColor: this.props.color.string()}} />
         <Draggable
-          axis="both" 
+          axis="both"
           bounds={{left: 0, top: 0, right: 255, bottom: 255}} >
           <img
             className="Selector"
-            src={sliderLine}
+            ref={(selector) => {this.selector = selector}}
+            src={targetIcon}
             alt="selector" />
         </Draggable>
       </div>

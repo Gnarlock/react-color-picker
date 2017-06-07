@@ -1,4 +1,5 @@
 .Gradient {
+  user-select: none;
 	display: flex;
   flex-direction: row;
   flex-grow: 1;
@@ -13,6 +14,7 @@
   width: 255px;
   margin-right: 10px;
   cursor: crosshair;
+  user-select: none;
 
   .Grid {
     height: 100%;
@@ -21,6 +23,8 @@
   }
 
   .Selector {
+    height: 32px;
+    width: 32px;
     position: absolute;
     user-select: none;
   }
