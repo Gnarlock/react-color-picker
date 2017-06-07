@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import './styles/ColorPicker.css';
 import Gradient from './Gradient';
 import ColorInfo from './ColorInfo';
+import './styles/ColorPicker.css';
 
-const hexRgb = require('hex-rgb');
 const Color = require('color');
 
 export default class ColorPicker extends Component {
@@ -11,29 +10,27 @@ export default class ColorPicker extends Component {
     super(props);
 
     this.state = {
-      color: Color({r:255, g:0, b:0})
+      color: Color.rgb([255,0,0])
     }
 
-    this.handleRGBChange = this.handleRGBChange.bind(this);
-    this.handleHexChange = this.handleHexChange.bind(this);
+    this.handleColorChange = this.handleColorChange.bind(this);
   }
 
-  handleRGBChange(rgb) {
-    this.setState({color: Color(rgb)});
-  }
+  handleColorChange(rgb) {
+    rgb.forEach((value,i) => {
+      rgb[i] = Math.round(value);
+    });
 
-  handleHexChange(hex) {
-    const rgbValues = hexRgb(hex);
-    const rgb = {r:rgbValues[0], g:rgbValues[1], b:rgbValues[2]};
-
-    this.setState({color: Color(rgb)});
+    this.setState({
+      color: Color.rgb(rgb)
+    });
   }
 
 	render() {
 		return (
       <div className="ColorPicker">
-        <Gradient color={this.state.color} onRGBChange={this.handleRGBChange} />
-        <ColorInfo color={this.state.color} onRGBChange={this.handleRGBChange} onHexChange={this.handleHexChange} />
+        <Gradient color={this.state.color} onColorChange={this.handleColorChange} />
+        <ColorInfo color={this.state.color} onColorChange={this.handleColorChange} />
       </div>
     );
 	}

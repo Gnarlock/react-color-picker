@@ -13,10 +13,17 @@
   width: 255px;
   margin-right: 10px;
   cursor: crosshair;
-}
-.Grid {
-  height: 100%;
-  width: 100%;
+
+  .Grid {
+    height: 100%;
+    width: 100%;
+    user-select: none;
+  }
+
+  .Selector {
+    position: absolute;
+    user-select: none;
+  }
 }
 
 .HueSliderBar {

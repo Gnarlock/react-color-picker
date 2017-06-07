@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
 import './styles/ColorInfo.css';
 
-class InputField extends React.Component {
+var HexRgb = require('hex-rgb');
+var ColorUtil = require('./utils/color');
+
+class ColorInput extends React.Component {
   constructor(props) {
     super(props);
-
-    this.rgbDecimalRegex = RegExp('^[0-9]{0,3}$', 'i');
-    this.rgbHexRegex = RegExp('^#[0-9A-F]{0,6}$', 'i');
+    this.state = {
+      focused: false
+    }
 
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleFocus = this.handleFocus.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
   }
 
   handleInputChange(event) {
-    event.preventDefault();
-
     function isValidInput(value, regex) {
       return regex.test(value);
     }
@@ -28,23 +31,39 @@ class InputField extends React.Component {
     const inputValue = event.target.value;
 
     let sanitizedInputValue = null;
-    if (this.props.type === "rgb" && isValidInput(inputValue, this.rgbDecimalRegex)) {
+    if (this.props.type === "rgb" && isValidInput(inputValue, ColorUtil.rgbDecimalRegex)) {
       sanitizedInputValue = sanitizeRGBInput(inputValue);
-    } else if (this.props.type === "hex" && isValidInput(inputValue, this.rgbHexRegex)) {
+    } else if (this.props.type === "hex" && isValidInput(inputValue, ColorUtil.rgbHexRegex)) {
       sanitizedInputValue = sanitizeHexInput(inputValue);
     } else {
       return;
     }
 
-    // Pass reference to this object so we can know which input was changed
+    // Pass reference to this so we can know which input was changed
     this.props.onInputChange(this, sanitizedInputValue);
+  }
+
+  handleFocus(event) {
+    this.setState({focused: true});
+  }
+
+  handleBlur(event) {
+    this.setState({focused: false});
+    if (this.props.type === "rgb") {
+    }
   }
 
   render() {
     return (
-      <div className="InputField">
+      <div className="ColorInput">
         <span>{this.props.label}</span>
-        <input onChange={this.handleInputChange} type="text" value={this.props.value || ""} spellCheck="false"  />
+        <input
+          onFocus={this.handleFocus}
+          onBlur={this.handleBlur}
+          onChange={this.handleInputChange}
+          value={this.props.value}
+          type="text"
+          spellCheck="false" />
       </div>
     );
   }
@@ -59,24 +78,27 @@ class ColorInputs extends React.Component {
   }
 
   handleRGBInputChange(input, value) {
-    const channel = input.props.channel;
-    let rgb = this.props.color.rgb();
+    const channel = ColorUtil.rgb.channels.getIndex(input.props.channel);
+    let rgb = this.props.color.array();
+
     rgb[channel] = value;
 
-    this.props.onRGBChange(rgb);
+    this.props.onColorInputChange(rgb);
   }
 
   handleHexInputChange(input, value) {
-    this.props.onHexChange(value);
+    const rgb = HexRgb(value);
+
+    this.props.onColorInputChange(rgb);
   }
 
   render() {
     return (
       <div className="ColorInputs">
-        <InputField onInputChange={this.handleRGBInputChange} type="rgb" label="R" channel="r" value={this.props.color.red()} />
-        <InputField onInputChange={this.handleRGBInputChange} type="rgb" label="G" channel="g" value={this.props.color.green()} />
-        <InputField onInputChange={this.handleRGBInputChange} type="rgb" label="B" channel="b" value={this.props.color.blue()} />
-        <InputField onInputChange={this.handleHexInputChange} type="hex" label="#" key="hex" value={this.props.color.hex()} />
+        <ColorInput onInputChange={this.handleRGBInputChange} type="rgb" label="R" channel="r" value={this.props.color.red()} />
+        <ColorInput onInputChange={this.handleRGBInputChange} type="rgb" label="G" channel="g" value={this.props.color.green()} />
+        <ColorInput onInputChange={this.handleRGBInputChange} type="rgb" label="B" channel="b" value={this.props.color.blue()} />
+        <ColorInput onInputChange={this.handleHexInputChange} type="hex" label="#" value={this.props.color.hex()} />
       </div>
     );
   }
@@ -84,14 +106,10 @@ class ColorInputs extends React.Component {
 
 export default class ColorInfo extends Component {
   render() {
-    const style = {
-      backgroundColor: this.props.color.hsl()
-    }
-
     return (
       <div className="ColorInfo">
-        <div className="Swatch" style={style} />
-        <ColorInputs onRGBChange={this.props.onRGBChange} onHexChange={this.props.onHexChange} color={this.props.color} />
+        <div className="Swatch" style={{backgroundColor: this.props.color.string()}} />
+        <ColorInputs onColorInputChange={this.props.onColorChange} color={this.props.color} />
       </div>
     );
   }
