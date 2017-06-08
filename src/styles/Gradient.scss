@@ -7,7 +7,7 @@
   margin-right: 5px;
 }
 
-.BrightnessGrid {
+.BrightnessSelectorMap {
   display: flex;
   flex-shrink: 0;
   height: 255px;
@@ -16,16 +16,44 @@
   cursor: crosshair;
   user-select: none;
 
-  .Grid {
+  .BrightnessMap {
     height: 100%;
     width: 100%;
+    position: relative;
     user-select: none;
+
+    .ColorLayer {
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      z-index: 0;
+    }
+
+    .DarknessLayer {
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      z-index: 1;
+      background:
+        linear-gradient(to right,
+          rgba(255,255,255,1) 0%,
+          rgba(255,255,255,0) 100%);
+    }
+
+    .LightnessLayer {
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      z-index: 2;
+      background: linear-gradient(to top, rgba(0,0,0,1) 0%,rgba(0,0,0,0) 100%);
+    }
   }
 
   .Selector {
     height: 10px;
     width: 10px;
     position: absolute;
+    z-index: 3;
     user-select: none;
   }
 }

@@ -31,21 +31,40 @@ class HueSliderBar extends React.Component {
     return Math.round(360 * Math.max(0, Math.min(255, this.state.position.y)) / 255);
   }
   updateHue() {
-    const newHue = this.calculateHueFromSliderPosition();
-    const newColor = Color.hsl(newHue, this.props.color.saturationl(), this.props.color.lightness());
-    const rgb = newColor.rgb().array();
+    const hue = this.calculateHueFromSliderPosition();
+    const hsl = {
+      h: hue,
+      s: this.props.color.saturationl(),
+      l: this.props.color.lightness()
+    };
+    const color = Color.hsl(hsl);
+    const rgb = color.rgb().array();
+
     this.props.onHueChange(rgb);
   }
 
-  handleSliderDrag(event) {
-    const newY = this.slider.getBoundingClientRect().top - this.slider.offsetTop;
-    const newPosition = {x: this.state.position.x, y: newY};
-    this.setState({position: newPosition}, this.updateHue);
+  handleSliderDrag(dragEvent) {
+    const sliderPosition = this.slider.getBoundingClientRect();
+    const x = this.state.position.x;
+    const y = sliderPosition.top - this.slider.offsetTop;
+
+    const position = {
+      x: x,
+      y: y
+    };
+
+    this.setState({position: position}, this.updateHue);
   }
-  handleBarClick(event) {
-    const newY = event.pageY - this.bar.offsetTop;
-    const newPosition = {x: this.state.position.x, y: newY};
-    this.setState({position: newPosition}, this.updateHue);
+  handleBarClick(clickEvent) {
+    const x = this.state.position.x;
+    const y = clickEvent.pageY - this.bar.offsetTop;
+
+    const position = {
+      x: x,
+      y: y
+    };
+
+    this.setState({position: position}, this.updateHue);
   }
 
   render() {
@@ -75,7 +94,7 @@ class HueSliderBar extends React.Component {
 
 
 
-class BrightnessGrid extends React.Component {
+class BrightnessSelectorMap extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -86,6 +105,7 @@ class BrightnessGrid extends React.Component {
     }
 
     this.handleDrag = this.handleDrag.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   calculateXFromHue() {
@@ -97,21 +117,25 @@ class BrightnessGrid extends React.Component {
   updateBrightness() {
 
   }
-  handleDrag(event) {
+  handleDrag(dragEvent) {
     const rect = this.selector.getBoundingClientRect();
     const newX = rect.left - this.selector.offsetLeft;
     const newY = rect.top - this.selector.offsetTop
     const newPosition = {x: newX, y: newY}
     this.setState({position: newPosition}, this.updateBrightness);
   }
+  handleClick(clickEvent) {
+
+  }
 
   render() {
     return (
-      <div className="BrightnessGrid">
-        <div
-          className="Grid"
-          style={{backgroundColor: this.props.color.string()}}
-          onClick={this.handleDrag} />
+      <div className="BrightnessSelectorMap">
+        <div className="BrightnessMap" onClick={this.handleClick} >
+          <div className="ColorLayer" style={{backgroundColor: this.props.color.string()}} />
+          <div className="DarknessLayer" />
+          <div className="LightnessLayer" />
+        </div>
         <Draggable
           axis="both"
           // Adjust bounds so the middle of image will intersect with corner of box
@@ -136,7 +160,7 @@ export default class Gradient extends React.Component {
 	render() {
 		return (
       <div className="Gradient">
-        <BrightnessGrid onBrightnessChange={this.props.onColorChange} color={this.props.color} />
+        <BrightnessSelectorMap onBrightnessChange={this.props.onColorChange} color={this.props.color} />
         <HueSliderBar onHueChange={this.props.onColorChange} color={this.props.color} />
       </div>
     );
