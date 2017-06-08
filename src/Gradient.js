@@ -13,37 +13,36 @@ class HueSliderBar extends React.Component {
     this.state = {
       position: {
         x: 0,
-        y: this.calculateSliderPositionFromCurrentColor()
+        y: this.getSliderPositionFromColor()
       }
     }
 
-    this.calculateSliderPositionFromCurrentColor = this.calculateSliderPositionFromCurrentColor.bind(this);
-    this.calculateHueFromSliderPosition = this.calculateHueFromSliderPosition.bind(this);
+    this.getSliderPositionFromColor = this.getSliderPositionFromColor.bind(this);
+    this.getHueFromSliderPosition = this.getHueFromSliderPosition.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.handleDrag = this.handleDrag.bind(this);
     this.updateHue = this.updateHue.bind(this);
-    this.handleSliderDrag = this.handleSliderDrag.bind(this);
-    this.handleBarClick = this.handleBarClick.bind(this);
   }
 
-  calculateSliderPositionFromCurrentColor() {
+  getSliderPositionFromColor() {
     return Math.round(255 * (this.props.color.hue() / 360));
   }
-  calculateHueFromSliderPosition() {
+  getHueFromSliderPosition() {
     return Math.round(360 * Math.max(0, Math.min(255, this.state.position.y)) / 255);
   }
-  updateHue() {
-    const hue = this.calculateHueFromSliderPosition();
-    const hsl = {
-      h: hue,
-      s: this.props.color.saturationl(),
-      l: this.props.color.lightness()
+
+  handleClick(event) {
+    const x = this.state.position.x;
+    const y = event.pageY - this.bar.offsetTop;
+
+    const position = {
+      x: x,
+      y: y
     };
-    const color = Color.hsl(hsl);
-    const rgb = color.rgb().array();
 
-    this.props.onHueChange(rgb);
+    this.setState({position: position}, this.updateHue);
   }
-
-  handleSliderDrag(dragEvent) {
+  handleDrag(event) {
     const sliderPosition = this.slider.getBoundingClientRect();
     const x = this.state.position.x;
     const y = sliderPosition.top - this.slider.offsetTop;
@@ -55,34 +54,44 @@ class HueSliderBar extends React.Component {
 
     this.setState({position: position}, this.updateHue);
   }
-  handleBarClick(clickEvent) {
-    const x = this.state.position.x;
-    const y = clickEvent.pageY - this.bar.offsetTop;
 
-    const position = {
-      x: x,
-      y: y
+  updateHue() {
+    const hue = this.getHueFromSliderPosition();
+    const hsl = {
+      h: hue,
+      s: this.props.color.saturationl(),
+      l: this.props.color.lightness()
     };
+    const color = Color.hsl(hsl);
+    const rgb = color.rgb().array();
 
-    this.setState({position: position}, this.updateHue);
+    this.props.onHueChange(rgb);
   }
 
   render() {
+    const style = {
+      slider: {
+        backgroundColor: this.props.color.string()
+      }
+    }
+
+    const bounds = {top: 0, bottom: 255};
+
     return (
       <div className="HueSliderBar">
         <div
           className="Bar"
           ref={(bar) => {this.bar = bar}}
-          onClick={this.handleBarClick} />
+          onClick={this.handleClick} />
         <Draggable 
           axis="y"
-          bounds={{top: 0, bottom: 255}}
+          bounds={bounds}
           position={this.state.position}
-          onDrag={this.handleSliderDrag} >
+          onDrag={this.handleDrag} >
           <img
             className="Slider"
             ref={(slider) => {this.slider = slider}}
-            style={{backgroundColor: this.props.color.string()}}
+            style={style.slider}
             src={sliderLine}
             alt="slider" />
         </Draggable>
@@ -104,49 +113,79 @@ class BrightnessSelectorMap extends React.Component {
       }
     }
 
-    this.handleDrag = this.handleDrag.bind(this);
+    this.getSelectorPositionFromColor = this.getSelectorPositionFromColor.bind(this);
+    this.getSaturationFromSelectorPosition = this.getSaturationFromSelectorPosition.bind(this);
+    this.getLightnessFromSelectorPosition = this.getLightnessFromSelectorPosition.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleDrag = this.handleDrag.bind(this);
+    this.updateLightness = this.updateLightness.bind(this);
   }
 
-  calculateXFromHue() {
+  getSelectorPositionFromColor() {
 
   }
-  calculateYFromLightness() {
-
+  getLightnessFromSelectorPosition() {
+    return Math.round(100 * (255 - Math.max(0, Math.min(255, (this.state.position.y - 0)))) / 255);
   }
-  updateBrightness() {
-
+  getSaturationFromSelectorPosition() {
+    return Math.round(100 * (Math.max(0, Math.min(255, (this.state.position.x - 0)))) / 255);
   }
-  handleDrag(dragEvent) {
+  updateLightness() {
+    const saturation = this.getSaturationFromSelectorPosition();
+    const lightness = this.getLightnessFromSelectorPosition();
+
+    const hsl = {
+      h: this.props.color.hue(),
+      s: saturation,
+      l: lightness
+    };
+    const color = Color.hsl(hsl);
+    const rgb = color.rgb().array();
+
+    this.props.onLightnessChange(rgb);
+  }
+  handleDrag(event) {
     const rect = this.selector.getBoundingClientRect();
     const newX = rect.left - this.selector.offsetLeft;
     const newY = rect.top - this.selector.offsetTop
     const newPosition = {x: newX, y: newY}
-    this.setState({position: newPosition}, this.updateBrightness);
+    this.setState({position: newPosition}, this.updateLightness);
   }
-  handleClick(clickEvent) {
+  handleClick(event) {
 
   }
 
   render() {
+    const style = {
+      brightnessMap: {
+        backgroundColor: this.props.color.string()
+      },
+      selector: {
+        filter: `invert(${this.props.color.lightness()})`
+      }
+    };
+
+    // Adjust bounds so the middle of image will intersect with corners of box
+    const bounds = {left: -5, top: -5, right: 250, bottom: 250};
+
     return (
       <div className="BrightnessSelectorMap">
         <div className="BrightnessMap" onClick={this.handleClick} >
-          <div className="ColorLayer" style={{backgroundColor: this.props.color.string()}} />
+          <div className="ColorLayer" style={style.brightnessMap} />
           <div className="DarknessLayer" />
           <div className="LightnessLayer" />
         </div>
         <Draggable
           axis="both"
-          // Adjust bounds so the middle of image will intersect with corner of box
-          bounds={{left: -5, top: -5, right: 250, bottom: 250}}
+          bounds={bounds}
           position={this.state.position}
           onDrag={this.handleDrag} >
           <img
             className="Selector"
             ref={(selector) => {this.selector = selector}}
             src={targetIcon}
-            alt="selector" />
+            alt="selector"
+            style={style.selector} />
         </Draggable>
       </div>
     );
@@ -160,8 +199,12 @@ export default class Gradient extends React.Component {
 	render() {
 		return (
       <div className="Gradient">
-        <BrightnessSelectorMap onBrightnessChange={this.props.onColorChange} color={this.props.color} />
-        <HueSliderBar onHueChange={this.props.onColorChange} color={this.props.color} />
+        <BrightnessSelectorMap
+          color={this.props.color}
+          onLightnessChange={this.props.onColorChange} />
+        <HueSliderBar 
+          color={this.props.color}
+          onHueChange={this.props.onColorChange} />
       </div>
     );
 	}
