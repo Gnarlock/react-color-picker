@@ -25,9 +25,11 @@ class HueSliderBar extends React.Component {
   }
 
   getSliderPositionFromColor() {
+    // TODO: Use size of bar (replace 255)
     return Math.round(255 * (this.props.color.hue() / 360));
   }
   getHueFromSliderPosition() {
+    // TODO: Use size of bar (replace 255)
     return Math.round(360 * Math.max(0, Math.min(255, this.state.position.y)) / 255);
   }
 
@@ -81,6 +83,7 @@ class HueSliderBar extends React.Component {
           onClick={this.handleClick} />
         <Draggable 
           axis="y"
+          // TODO: Use size of bar (replace 255)
           bounds={{top: 0, bottom: 255}}
           position={this.state.position}
           onDrag={this.handleDrag} >
@@ -121,9 +124,13 @@ class SaturationLightnessSelectorMap extends React.Component {
 
   }
   getLightnessFromSelectorPosition() {
-    return Math.round(100 * ((255 - Math.max(0, Math.min(255, (this.state.position.y - 0)))) / 255));
+    // TODO: Use size of map (replace 255)
+    const lightness = (255 - Math.max(0, Math.min(255, this.state.position.y))) / 255; // Values 0 - 1
+    const diminishingFactor = Math.min(2, (Math.max(0, (this.state.position.x / 255)) + 1)); // Values 1 - 2
+    return Math.round(100 * (lightness / diminishingFactor)); // Values 0 - 100
   }
   getSaturationFromSelectorPosition() {
+    // TODO: Use size of map (replace 255)
     return Math.round(100 * ((Math.max(0, Math.min(255, (this.state.position.x - 0)))) / 255));
   }
   updateLightness() {
@@ -183,6 +190,7 @@ class SaturationLightnessSelectorMap extends React.Component {
       <div className="SaturationLightnessSelectorMap">
         <div
           className="Map"
+          ref={(map) => {this.map = map}}
           onClick={this.handleClick} >
           <div className="ColorLayer" style={style.colorLayer} />
           <div className="DarkLayer" />
@@ -190,6 +198,7 @@ class SaturationLightnessSelectorMap extends React.Component {
         </div>
         <Draggable
           axis="both"
+          // TODO: Use size of map (replace 255)
           bounds={{left: 0, top: 0, right: 255, bottom: 255}}
           position={this.state.position}
           onDrag={this.handleDrag} >
