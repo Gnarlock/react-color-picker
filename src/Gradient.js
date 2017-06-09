@@ -1,8 +1,8 @@
 import React from 'react';
 import Draggable from 'react-draggable';
-import './styles/Gradient.css';
 import sliderLine from './images/sliderLine.svg';
 import targetIcon from './images/target.png';
+import './styles/Gradient.css';
 
 const Color = require('color');
 
@@ -75,8 +75,6 @@ class HueSliderBar extends React.Component {
       }
     }
 
-    const bounds = {top: 0, bottom: 255};
-
     return (
       <div className="HueSliderBar">
         <div
@@ -85,7 +83,7 @@ class HueSliderBar extends React.Component {
           onClick={this.handleClick} />
         <Draggable 
           axis="y"
-          bounds={bounds}
+          bounds={{top: 0, bottom: 255}}
           position={this.state.position}
           onDrag={this.handleDrag} >
           <img
@@ -156,28 +154,33 @@ class BrightnessSelectorMap extends React.Component {
   }
 
   render() {
+    // Background of ColorLayer is based only on hue. Use default saturation/lightness
+    const hsl = {
+      h: this.props.color.hue(),
+      s: 100,
+      l: 50
+    };
+    const backgroundColor = Color.hsl(hsl);
+    const selectorFilter = "invert(" + this.props.color.lightness() + "%)";
     const style = {
-      brightnessMap: {
-        backgroundColor: this.props.color.string()
+      colorLayer: {
+        backgroundColor: backgroundColor
       },
       selector: {
-        filter: `invert(${this.props.color.lightness()})`
+        filter: selectorFilter
       }
     };
 
-    // Adjust bounds so the middle of image will intersect with corners of box
-    const bounds = {left: -5, top: -5, right: 250, bottom: 250};
-
     return (
       <div className="BrightnessSelectorMap">
-        <div className="BrightnessMap" onClick={this.handleClick} >
-          <div className="ColorLayer" style={style.brightnessMap} />
+        <div className="Map" onClick={this.handleClick} >
+          <div className="ColorLayer" style={style.colorLayer} />
           <div className="DarknessLayer" />
           <div className="LightnessLayer" />
         </div>
         <Draggable
           axis="both"
-          bounds={bounds}
+          bounds={{left: 0, top: 0, right: 255, bottom: 255}}
           position={this.state.position}
           onDrag={this.handleDrag} >
           <img
