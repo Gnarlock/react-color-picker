@@ -17,10 +17,6 @@ export default class ColorPicker extends Component {
   }
 
   handleColorChange(rgb) {
-    rgb.forEach((value,i) => {
-      rgb[i] = Math.round(value);
-    });
-
     this.setState({
       color: Color.rgb(rgb)
     });

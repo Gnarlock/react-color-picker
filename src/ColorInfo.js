@@ -99,6 +99,7 @@ class ColorInputs extends React.Component {
         <ColorInput onInputChange={this.handleRGBInputChange} type="rgb" label="G" channel="g" value={this.props.color.green()} />
         <ColorInput onInputChange={this.handleRGBInputChange} type="rgb" label="B" channel="b" value={this.props.color.blue()} />
         <ColorInput onInputChange={this.handleHexInputChange} type="hex" label="#" value={this.props.color.hex()} />
+        <ColorInput label="H" value={this.props.color.hue()} />
       </div>
     );
   }
