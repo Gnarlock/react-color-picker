@@ -57,15 +57,11 @@ class HueSliderBar extends React.Component {
 
   updateHue() {
     const hue = this.getHueFromSliderPosition();
-    const hsl = {
-      h: hue,
-      s: this.props.color.saturationl(),
-      l: this.props.color.lightness()
-    };
-    const color = Color.hsl(hsl);
-    const rgb = color.rgb().array();
+    let hsl = this.props.color.hsl().object();
 
-    this.props.onHueChange(rgb);
+    hsl.h = hue;
+
+    this.props.onHueChange(hsl);
   }
 
   render() {
@@ -136,15 +132,12 @@ class SaturationLightnessSelectorMap extends React.Component {
   updateLightness() {
     const saturation = this.getSaturationFromSelectorPosition();
     const lightness = this.getLightnessFromSelectorPosition();
-    const hsl = {
-      h: this.props.color.hue(),
-      s: saturation,
-      l: lightness
-    };
-    const color = Color.hsl(hsl);
-    const rgb = color.rgb().array();
+    let hsl = this.props.color.hsl().object();
 
-    this.props.onLightnessChange(rgb);
+    hsl.s = saturation;
+    hsl.l = lightness;
+
+    this.props.onLightnessChange(hsl);
   }
   handleDrag(event) {
     const rect = this.selector.getBoundingClientRect();
@@ -175,11 +168,11 @@ class SaturationLightnessSelectorMap extends React.Component {
       s: 100,
       l: 50
     };
-    const backgroundColor = Color.hsl(hsl);
+    const color = Color(hsl);
     const filter = "invert(" + this.props.color.lightness() + "%)";
     const style = {
       colorLayer: {
-        backgroundColor: backgroundColor
+        backgroundColor: color.rgb().string()
       },
       selector: {
         filter: filter

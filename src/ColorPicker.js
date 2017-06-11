@@ -16,9 +16,9 @@ export default class ColorPicker extends Component {
     this.handleColorChange = this.handleColorChange.bind(this);
   }
 
-  handleColorChange(rgb) {
+  handleColorChange(color) {
     this.setState({
-      color: Color.rgb(rgb)
+      color: Color(color)
     });
   }
 

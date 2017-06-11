@@ -79,7 +79,7 @@ class ColorInputs extends React.Component {
 
   handleRGBInputChange(input, value) {
     const channel = ColorUtil.rgb.channels.getIndex(input.props.channel);
-    let rgb = this.props.color.array();
+    let rgb = this.props.color.rgb().object();
 
     rgb[channel] = value;
 
@@ -87,7 +87,12 @@ class ColorInputs extends React.Component {
   }
 
   handleHexInputChange(input, value) {
-    const rgb = HexRgb(value);
+    const rgbValues = HexRgb(value);
+    const rgb = {
+      r: rgbValues[0],
+      g: rgbValues[1],
+      b: rgbValues[2]
+    }
 
     this.props.onColorInputChange(rgb);
   }
