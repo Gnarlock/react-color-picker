@@ -11,10 +11,7 @@ class HueSliderBar extends React.Component {
     super(props);
 
     this.state = {
-      position: {
-        x: 0,
-        y: this.getSliderPositionFromColor()
-      }
+      position: this.getSliderPositionFromColor()
     }
 
     this.getSliderPositionFromColor = this.getSliderPositionFromColor.bind(this);
@@ -26,7 +23,14 @@ class HueSliderBar extends React.Component {
 
   getSliderPositionFromColor() {
     // TODO: Use size of bar (replace 255)
-    return Math.round(255 * (this.props.color.hue() / 360));
+    const x = 0;
+    const y = Math.round(255 * (this.props.color.hue() / 360));
+    const position = {
+      x: x,
+      y: y
+    }
+
+    return position;
   }
   getHueFromSliderPosition() {
     // TODO: Use size of bar (replace 255)
@@ -102,22 +106,28 @@ class SaturationLightnessSelectorMap extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      position: {
-        x: 0,
-        y: 0
-      }
+      position: this.getSelectorPositionFromColor()
     }
 
     this.getSelectorPositionFromColor = this.getSelectorPositionFromColor.bind(this);
     this.getSaturationFromSelectorPosition = this.getSaturationFromSelectorPosition.bind(this);
     this.getLightnessFromSelectorPosition = this.getLightnessFromSelectorPosition.bind(this);
+    this.getSelectorPositionFromColor = this.getSelectorPositionFromColor.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
     this.updateSaturationLightness = this.updateSaturationLightness.bind(this);
   }
 
+  // Calculations here aren't very accurate
   getSelectorPositionFromColor() {
+    const y = 255 - (255 * this.props.color.saturationl()) / 100;
+    const x = (255 * this.props.color.lightness()) / 100;
+    const position = {
+      x: x,
+      y: y
+    }
 
+    return position;
   }
   getLightnessFromSelectorPosition() {
     // TODO: Use size of map (replace 255)
