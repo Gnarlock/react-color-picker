@@ -113,7 +113,7 @@ class SaturationLightnessSelectorMap extends React.Component {
     this.getLightnessFromSelectorPosition = this.getLightnessFromSelectorPosition.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
-    this.updateSaturationAndLightness = this.updateSaturationAndLightness.bind(this);
+    this.updateSaturationLightness = this.updateSaturationLightness.bind(this);
   }
 
   getSelectorPositionFromColor() {
@@ -129,7 +129,7 @@ class SaturationLightnessSelectorMap extends React.Component {
     // TODO: Use size of map (replace 255)
     return Math.round(100 * ((Math.max(0, Math.min(255, (this.state.position.x - 0)))) / 255));
   }
-  updateSaturationAndLightness() {
+  updateSaturationLightness() {
     const saturation = this.getSaturationFromSelectorPosition();
     const lightness = this.getLightnessFromSelectorPosition();
     let hsl = this.props.color.hsl().object();
@@ -137,7 +137,7 @@ class SaturationLightnessSelectorMap extends React.Component {
     hsl.s = saturation;
     hsl.l = lightness;
 
-    this.props.onLightnessChange(hsl);
+    this.props.onSaturationLightnessChange(hsl);
   }
   handleDrag(event) {
     const rect = this.selector.getBoundingClientRect();
@@ -148,7 +148,7 @@ class SaturationLightnessSelectorMap extends React.Component {
       y: y
     }
 
-    this.setState({position: position}, this.updateSaturationAndLightness);
+    this.setState({position: position}, this.updateSaturationLightness);
   }
   handleClick(event) {
     const x = event.pageX - this.selector.offsetLeft;
@@ -158,7 +158,7 @@ class SaturationLightnessSelectorMap extends React.Component {
       y: y
     };
 
-    this.setState({position: position}, this.updateSaturationAndLightness);
+    this.setState({position: position}, this.updateSaturationLightness);
   }
 
   render() {
@@ -216,7 +216,7 @@ export default class Gradient extends React.Component {
       <div className="Gradient">
         <SaturationLightnessSelectorMap
           color={this.props.color}
-          onLightnessChange={this.props.onColorChange} />
+          onSaturationLightnessChange={this.props.onColorChange} />
         <HueSliderBar 
           color={this.props.color}
           onHueChange={this.props.onColorChange} />
