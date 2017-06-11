@@ -113,7 +113,7 @@ class SaturationLightnessSelectorMap extends React.Component {
     this.getLightnessFromSelectorPosition = this.getLightnessFromSelectorPosition.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
-    this.updateLightness = this.updateLightness.bind(this);
+    this.updateSaturationAndLightness = this.updateSaturationAndLightness.bind(this);
   }
 
   getSelectorPositionFromColor() {
@@ -129,7 +129,7 @@ class SaturationLightnessSelectorMap extends React.Component {
     // TODO: Use size of map (replace 255)
     return Math.round(100 * ((Math.max(0, Math.min(255, (this.state.position.x - 0)))) / 255));
   }
-  updateLightness() {
+  updateSaturationAndLightness() {
     const saturation = this.getSaturationFromSelectorPosition();
     const lightness = this.getLightnessFromSelectorPosition();
     let hsl = this.props.color.hsl().object();
@@ -148,7 +148,7 @@ class SaturationLightnessSelectorMap extends React.Component {
       y: y
     }
 
-    this.setState({position: position}, this.updateLightness);
+    this.setState({position: position}, this.updateSaturationAndLightness);
   }
   handleClick(event) {
     const x = event.pageX - this.selector.offsetLeft;
@@ -158,7 +158,7 @@ class SaturationLightnessSelectorMap extends React.Component {
       y: y
     };
 
-    this.setState({position: position}, this.updateLightness);
+    this.setState({position: position}, this.updateSaturationAndLightness);
   }
 
   render() {
