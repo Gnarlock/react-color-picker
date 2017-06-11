@@ -78,7 +78,7 @@ class ColorInputs extends React.Component {
   }
 
   handleRGBInputChange(input, value) {
-    const channel = ColorUtil.rgb.channels.getIndex(input.props.channel);
+    const channel = input.props.channel;
     let rgb = this.props.color.rgb().object();
 
     rgb[channel] = value;
@@ -100,11 +100,10 @@ class ColorInputs extends React.Component {
   render() {
     return (
       <div className="ColorInputs">
-        <ColorInput onInputChange={this.handleRGBInputChange} type="rgb" label="R" channel="r" value={this.props.color.red()} />
-        <ColorInput onInputChange={this.handleRGBInputChange} type="rgb" label="G" channel="g" value={this.props.color.green()} />
-        <ColorInput onInputChange={this.handleRGBInputChange} type="rgb" label="B" channel="b" value={this.props.color.blue()} />
+        <ColorInput onInputChange={this.handleRGBInputChange} type="rgb" label="R" channel="r" value={Math.round(this.props.color.red())} />
+        <ColorInput onInputChange={this.handleRGBInputChange} type="rgb" label="G" channel="g" value={Math.round(this.props.color.green())} />
+        <ColorInput onInputChange={this.handleRGBInputChange} type="rgb" label="B" channel="b" value={Math.round(this.props.color.blue())} />
         <ColorInput onInputChange={this.handleHexInputChange} type="hex" label="#" value={this.props.color.hex()} />
-        <ColorInput label="H" value={this.props.color.hue()} />
       </div>
     );
   }
