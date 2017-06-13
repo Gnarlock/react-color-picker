@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Gradient from './Gradient';
+import HSLEditor from './HSLEditor';
 import ColorInfo from './ColorInfo';
 import './styles/ColorPicker.css';
 
@@ -25,7 +25,7 @@ export default class ColorPicker extends Component {
 	render() {
 		return (
       <div className="ColorPicker">
-        <Gradient color={this.state.color} onColorChange={this.handleColorChange} size={{height: 510, width: 510}} />
+        <HSLEditor color={this.state.color} onColorChange={this.handleColorChange} size={{height: 510, width: 510}} />
         <ColorInfo color={this.state.color} onColorChange={this.handleColorChange} />
       </div>
     );

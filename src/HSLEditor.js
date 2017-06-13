@@ -2,7 +2,7 @@ import React from 'react';
 import Draggable from 'react-draggable';
 import sliderLine from './images/sliderLine.svg';
 import selectorIcon from './images/selector.png';
-import './styles/Gradient.css';
+import './styles/HSLEditor.css';
 
 const Color = require('color');
 
@@ -245,11 +245,11 @@ class SaturationLightnessSelectorMap extends React.Component {
 
 
 
-export default class Gradient extends React.Component {
+export default class HSLEditor extends React.Component {
 	render() {
 		return (
       <div
-        className="Gradient">
+        className="HSLEditor">
         <SaturationLightnessSelectorMap
           size={this.props.size}
           color={this.props.color}
