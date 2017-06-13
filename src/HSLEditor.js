@@ -16,7 +16,7 @@ class HueSliderBar extends React.Component {
 
     this.getSliderPositionFromColor = this.getSliderPositionFromColor.bind(this);
     this.getHueFromSliderPosition = this.getHueFromSliderPosition.bind(this);
-    this.handleMouseUp = this.handleMouseUp.bind(this);
+    this.handleClick = this.handleClick.bind(this);
     this.handleWheel = this.handleWheel.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
     this.updateSliderPosition = this.updateSliderPosition.bind(this);
@@ -38,7 +38,7 @@ class HueSliderBar extends React.Component {
     return Math.round(360 * Math.max(0, Math.min(this.props.size.height, this.state.position.y)) / this.props.size.height);
   }
 
-  handleMouseUp(event) {
+  handleClick(event) {
     const x = this.state.position.x;
     const y = event.pageY - this.bar.offsetTop;
 
@@ -48,12 +48,14 @@ class HueSliderBar extends React.Component {
   handleDrag(event) {
     const position = this.slider.getBoundingClientRect();
     const x = this.state.position.x;
-    const y = position.top - this.slider.offsetTop;
+    const y = Math.round(position.top - this.slider.offsetTop);
 
     this.updateSliderPosition(x, y);
   }
 
   handleWheel(event) {
+    event.preventDefault(); // Don't scroll page
+
     let x = this.state.position.x;
     let y = this.state.position.y;
 
@@ -86,12 +88,9 @@ class HueSliderBar extends React.Component {
 
   render() {
     const style = {
-      slider: {
-        backgroundColor: this.props.color.string()
-      },
       bar: {
         height: this.props.size.height,
-        width: 20
+        width: 30
       }
     }
 
@@ -102,19 +101,17 @@ class HueSliderBar extends React.Component {
           className="Bar"
           ref={(bar) => {this.bar = bar}}
           style={style.bar}
-          onMouseUp={this.handleMouseUp}
+          onClick={this.handleClick}
           onWheel={this.handleWheel} />
         <Draggable 
           axis="y"
+          handle=".Slider"
           bounds={{top: 0, bottom: this.props.size.height}}
           position={this.state.position}
           onDrag={this.handleDrag} >
-          <img
+          <div
             className="Slider"
-            ref={(slider) => {this.slider = slider}}
-            style={style.slider}
-            src={sliderLine}
-            alt="slider" />
+            ref={(slider) => {this.slider = slider}} />
         </Draggable>
       </div>
     );
@@ -128,15 +125,21 @@ class SaturationLightnessSelectorMap extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      position: this.getSelectorPositionFromColor()
+      position: this.getSelectorPositionFromColor(),
+      mouseButton: null
     }
 
     this.getSelectorPositionFromColor = this.getSelectorPositionFromColor.bind(this);
     this.getSaturationFromSelectorPosition = this.getSaturationFromSelectorPosition.bind(this);
     this.getLightnessFromSelectorPosition = this.getLightnessFromSelectorPosition.bind(this);
     this.getSelectorPositionFromColor = this.getSelectorPositionFromColor.bind(this);
+
     this.handleClick = this.handleClick.bind(this);
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
+
     this.updateSaturationLightness = this.updateSaturationLightness.bind(this);
     this.updateSelectorPosition = this.updateSelectorPosition.bind(this);
   }
@@ -161,18 +164,43 @@ class SaturationLightnessSelectorMap extends React.Component {
   }
 
   handleDrag(event) {
+    event.preventDefault();
+
     const rect = this.selector.getBoundingClientRect();
     const x = rect.left - this.selector.offsetLeft;
-    const y = rect.top - this.selector.offsetTop
+    const y = rect.top - this.selector.offsetTop;
 
     this.updateSelectorPosition(x, y);
   }
 
   handleClick(event) {
-    const x = event.pageX - this.selector.offsetLeft;
-    const y = event.pageY - this.selector.offsetTop;
+    if (event.button === 0) {
+      const rect = this.selector.getBoundingClientRect();
+      const x = event.pageX - this.selector.offsetLeft - (rect.width / 2);
+      const y = event.pageY - this.selector.offsetTop - (rect.height / 2);
 
-    this.updateSelectorPosition(x, y);
+      this.updateSelectorPosition(x, y);
+    }
+  }
+
+  handleMouseMove(event) {
+    event.preventDefault();
+    if (this.state.mouseButton === 0) {
+      // console.log("Button held");
+      const rect = this.selector.getBoundingClientRect();
+      const x = event.pageX - this.selector.offsetLeft - (rect.width / 2);
+      const y = event.pageY - this.selector.offsetTop - (rect.height / 2);
+
+      this.updateSelectorPosition(x, y);
+    }
+  }
+
+  handleMouseDown(event) {
+    this.setState({mouseButton: event.button})
+  }
+
+  handleMouseUp(event) {
+    this.setState({mouseButton: null});
   }
 
   updateSaturationLightness() {
@@ -188,8 +216,8 @@ class SaturationLightnessSelectorMap extends React.Component {
 
   updateSelectorPosition(x, y) {
     const position = {
-      x: x,
-      y: y
+      x: Math.max(0, Math.min(this.props.size.width, x)),
+      y: Math.max(0, Math.min(this.props.size.height, y))
     };
 
     this.setState({position: position}, this.updateSaturationLightness);
@@ -204,7 +232,10 @@ class SaturationLightnessSelectorMap extends React.Component {
     };
     const color = Color(hsl);
     const backgroundColor = color.rgb().string();
+
     const filter = "invert(" + this.props.color.lightness() + "%)";
+    const transformation = `translate(${this.state.position.x}px, ${this.state.position.y}px)`;
+
     const style = {
       map: {
         backgroundColor: backgroundColor,
@@ -212,7 +243,8 @@ class SaturationLightnessSelectorMap extends React.Component {
         width: this.props.size.width || 255
       },
       selector: {
-        filter: filter
+        filter: filter,
+        transform: transformation
       }
     };
 
@@ -223,20 +255,17 @@ class SaturationLightnessSelectorMap extends React.Component {
           className="Map"
           ref={(map) => {this.map = map}}
           style={style.map}
-          onClick={this.handleClick} >
-        </div>
-        <Draggable
-          axis="both"
-          bounds={{left: 0, top: 0, right: this.props.size.width, bottom: this.props.size.height}}
-          position={this.state.position}
-          onDrag={this.handleDrag} >
-          <img
-            className="Selector"
-            ref={(selector) => {this.selector = selector}}
-            src={selectorIcon}
-            alt="selector"
-            style={style.selector} />
-        </Draggable>
+          onClick={this.handleClick}
+          onMouseDown={this.handleMouseDown}
+          onMouseMove={this.handleMouseMove}
+          onMouseUp={this.handleMouseUp} />
+        <div
+          className="Selector"
+          ref={(selector) => {this.selector = selector}}
+          style={style.selector}
+          onMouseDown={this.handleMouseDown}
+          onMouseMove={this.handleMouseMove}
+          onMouseUp={this.handleMouseUp} />
       </div>
     );
   }
