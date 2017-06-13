@@ -16,9 +16,11 @@ class HueSliderBar extends React.Component {
 
     this.getSliderPositionFromColor = this.getSliderPositionFromColor.bind(this);
     this.getHueFromSliderPosition = this.getHueFromSliderPosition.bind(this);
+
     this.handleClick = this.handleClick.bind(this);
     this.handleWheel = this.handleWheel.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
+
     this.updateSliderPosition = this.updateSliderPosition.bind(this);
     this.updateHue = this.updateHue.bind(this);
   }
@@ -94,6 +96,8 @@ class HueSliderBar extends React.Component {
       }
     }
 
+    const position = this.getSliderPositionFromColor();
+
     return (
       <div
         className="HueSliderBar">
@@ -107,7 +111,7 @@ class HueSliderBar extends React.Component {
           axis="y"
           handle=".Slider"
           bounds={{top: 0, bottom: this.props.size.height}}
-          position={this.state.position}
+          position={position}
           onDrag={this.handleDrag} >
           <div
             className="Slider"
@@ -117,9 +121,6 @@ class HueSliderBar extends React.Component {
     );
   }
 }
-
-
-
 
 class SaturationLightnessSelectorMap extends React.Component {
   constructor(props) {
@@ -272,9 +273,6 @@ class SaturationLightnessSelectorMap extends React.Component {
     );
   }
 }
-
-
-
 
 export default class HSLEditor extends React.Component {
 	render() {
