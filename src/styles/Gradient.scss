@@ -8,8 +8,6 @@
   .SaturationLightnessSelectorMap {
     display: flex;
     flex-shrink: 0;
-    height: 255px;
-    width: 255px;
     margin-right: 10px;
     cursor: crosshair;
 
@@ -52,8 +50,6 @@
     }
 
     .Bar {
-      width: 20px;
-      height: 255px;
       cursor: pointer;
       background:
         linear-gradient(to bottom,

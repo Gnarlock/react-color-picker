@@ -25,7 +25,7 @@ export default class ColorPicker extends Component {
 	render() {
 		return (
       <div className="ColorPicker">
-        <Gradient color={this.state.color} onColorChange={this.handleColorChange} />
+        <Gradient color={this.state.color} onColorChange={this.handleColorChange} size={{height: 510, width: 510}} />
         <ColorInfo color={this.state.color} onColorChange={this.handleColorChange} />
       </div>
     );

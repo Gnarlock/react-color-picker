@@ -17,15 +17,15 @@ class HueSliderBar extends React.Component {
     this.getSliderPositionFromColor = this.getSliderPositionFromColor.bind(this);
     this.getHueFromSliderPosition = this.getHueFromSliderPosition.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
+    this.handleWheel = this.handleWheel.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
     this.updateSliderPosition = this.updateSliderPosition.bind(this);
     this.updateHue = this.updateHue.bind(this);
   }
 
   getSliderPositionFromColor() {
-    // TODO: Use size of bar (replace 255)
     const x = 0;
-    const y = Math.round(255 * (this.props.color.hue() / 360));
+    const y = Math.round(this.props.size.height * (this.props.color.hue() / 360));
     const position = {
       x: x,
       y: y
@@ -35,8 +35,7 @@ class HueSliderBar extends React.Component {
   }
 
   getHueFromSliderPosition() {
-    // TODO: Use size of bar (replace 255)
-    return Math.round(360 * Math.max(0, Math.min(255, this.state.position.y)) / 255);
+    return Math.round(360 * Math.max(0, Math.min(this.props.size.height, this.state.position.y)) / this.props.size.height);
   }
 
   handleMouseUp(event) {
@@ -50,6 +49,19 @@ class HueSliderBar extends React.Component {
     const position = this.slider.getBoundingClientRect();
     const x = this.state.position.x;
     const y = position.top - this.slider.offsetTop;
+
+    this.updateSliderPosition(x, y);
+  }
+
+  handleWheel(event) {
+    let x = this.state.position.x;
+    let y = this.state.position.y;
+
+    if (event.deltaY < 0) {
+      y = Math.max(0, (y - 1));
+    } else if (event.deltaY > 0) {
+      y = Math.min(this.props.size.height, (y + 1));
+    }
 
     this.updateSliderPosition(x, y);
   }
@@ -76,6 +88,10 @@ class HueSliderBar extends React.Component {
     const style = {
       slider: {
         backgroundColor: this.props.color.string()
+      },
+      bar: {
+        height: this.props.size.height,
+        width: 20
       }
     }
 
@@ -85,11 +101,12 @@ class HueSliderBar extends React.Component {
         <div
           className="Bar"
           ref={(bar) => {this.bar = bar}}
-          onMouseUp={this.MouseUp} />
+          style={style.bar}
+          onMouseUp={this.handleMouseUp}
+          onWheel={this.handleWheel} />
         <Draggable 
           axis="y"
-          // TODO: Use size of bar (replace 255)
-          bounds={{top: 0, bottom: 255}}
+          bounds={{top: 0, bottom: this.props.size.height}}
           position={this.state.position}
           onDrag={this.handleDrag} >
           <img
@@ -124,10 +141,9 @@ class SaturationLightnessSelectorMap extends React.Component {
     this.updateSelectorPosition = this.updateSelectorPosition.bind(this);
   }
 
-  // Calculations here aren't very accurate
   getSelectorPositionFromColor() {
-    const x = 255 * (this.props.color.saturationl() / 100);
-    const y = 255 - (255 * (this.props.color.lightness() / 100));
+    const x = (this.props.size.width * (this.props.color.saturationl() / 100));
+    const y = (this.props.size.height - (this.props.size.height * (this.props.color.lightness() / 100)));
     const position = {
       x: x,
       y: y
@@ -137,13 +153,11 @@ class SaturationLightnessSelectorMap extends React.Component {
   }
 
   getLightnessFromSelectorPosition() {
-    // TODO: Use size of map (replace 255)
-    return Math.round(100 * ((255 - this.state.position.y) / 255));
+    return Math.round(100 * ((this.props.size.height - this.state.position.y) / this.props.size.height));
   }
 
   getSaturationFromSelectorPosition() {
-    // TODO: Use size of map (replace 255)
-    return Math.round(100 * (this.state.position.x / 255));
+    return Math.round(100 * (this.state.position.x / this.props.size.width));
   }
 
   handleDrag(event) {
@@ -192,8 +206,10 @@ class SaturationLightnessSelectorMap extends React.Component {
     const backgroundColor = color.rgb().string();
     const filter = "invert(" + this.props.color.lightness() + "%)";
     const style = {
-      colorLayer: {
-        backgroundColor: backgroundColor
+      map: {
+        backgroundColor: backgroundColor,
+        height: this.props.size.height || 255,
+        width: this.props.size.width || 255
       },
       selector: {
         filter: filter
@@ -206,13 +222,12 @@ class SaturationLightnessSelectorMap extends React.Component {
         <div
           className="Map"
           ref={(map) => {this.map = map}}
-          style={style.colorLayer}
+          style={style.map}
           onClick={this.handleClick} >
         </div>
         <Draggable
           axis="both"
-          // TODO: Use size of map (replace 255)
-          bounds={{left: 0, top: 0, right: 255, bottom: 255}}
+          bounds={{left: 0, top: 0, right: this.props.size.width, bottom: this.props.size.height}}
           position={this.state.position}
           onDrag={this.handleDrag} >
           <img
@@ -236,9 +251,11 @@ export default class Gradient extends React.Component {
       <div
         className="Gradient">
         <SaturationLightnessSelectorMap
+          size={this.props.size}
           color={this.props.color}
           onSaturationLightnessChange={this.props.onColorChange} />
-        <HueSliderBar 
+        <HueSliderBar
+          size={this.props.size}
           color={this.props.color}
           onHueChange={this.props.onColorChange} />
       </div>
