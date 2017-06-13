@@ -1,7 +1,5 @@
 import React from 'react';
 import Draggable from 'react-draggable';
-import sliderLine from './images/sliderLine.svg';
-import selectorIcon from './images/selector.png';
 import './styles/HSLEditor.css';
 
 const Color = require('color');
