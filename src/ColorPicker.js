@@ -10,7 +10,7 @@ export default class ColorPicker extends Component {
     super(props);
 
     this.state = {
-      color: Color.rgb([255,0,0])
+      color: Color.rgb([255, 0, 0])
     }
 
     this.handleColorChange = this.handleColorChange.bind(this);

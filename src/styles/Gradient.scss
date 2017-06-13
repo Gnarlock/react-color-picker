@@ -1,5 +1,4 @@
 .Gradient {
-  user-select: none;
 	display: flex;
   flex-direction: row;
   flex-grow: 1;
@@ -13,47 +12,30 @@
     width: 255px;
     margin-right: 10px;
     cursor: crosshair;
-    user-select: none;
 
     .Map {
       height: 100%;
       width: 100%;
       position: relative;
-
-      @mixin layer {
-        height: 100%;
-        width: 100%;
-        position: absolute;
-      }
-
-      .ColorLayer {
-        @include layer;
-        z-index: 0;
-      }
-
-      .DarkLayer {
-        @include layer;
-        z-index: 1;
-        background:
-          linear-gradient(to right,
-            rgba(255,255,255,1) 0%,
-            rgba(255,255,255,0) 100%);
-      }
-
-      .LightLayer {
-        @include layer;
-        z-index: 2;
-        background: linear-gradient(to top, rgba(0,0,0,1) 0%,rgba(0,0,0,0) 100%);
-      }
+      z-index: 0;
+      background:
+        linear-gradient(to bottom,
+          hsl(0, 0%, 100%) 0%,
+          hsla(0, 0%, 100%, 0) 50%,
+          hsla(0, 0%, 0%, 0) 50%,
+          hsl(0, 0%, 0%) 100%),
+        linear-gradient(to right,
+          hsl(0, 0%, 50%) 0%,
+          hsla(0, 0%, 50%, 0) 100%);
     }
 
     .Selector {
       height: 10px;
       width: 10px;
       position: absolute;
-      z-index: 3;
-      user-select: none;
+      z-index: 5;
       margin: -5px;
+      user-select: none;
     }
   }
 
@@ -65,12 +47,8 @@
       width: 20px;
       height: 5px;
       position: absolute;
-      cursor: grab;
+      cursor: ns-resize;
       user-select: none;
-
-      &:active {
-        cursor: grabbing;
-      }
     }
 
     .Bar {
