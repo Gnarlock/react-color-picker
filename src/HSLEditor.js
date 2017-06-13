@@ -137,6 +137,7 @@ class SaturationLightnessSelectorMap extends React.Component {
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
+    this.handleMouseLeave = this.handleMouseLeave.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
 
     this.updateSaturationLightness = this.updateSaturationLightness.bind(this);
@@ -182,10 +183,15 @@ class SaturationLightnessSelectorMap extends React.Component {
     }
   }
 
+  handleMouseDown(event) {
+    // this.selector.requestPointerLock();
+    this.setState({mouseButton: event.button})
+  }
+
   handleMouseMove(event) {
     event.preventDefault();
+    
     if (this.state.mouseButton === 0) {
-      // console.log("Button held");
       const rect = this.selector.getBoundingClientRect();
       const x = event.pageX - this.selector.offsetLeft - (rect.width / 2);
       const y = event.pageY - this.selector.offsetTop - (rect.height / 2);
@@ -194,14 +200,23 @@ class SaturationLightnessSelectorMap extends React.Component {
     }
   }
 
-  handleMouseDown(event) {
-    this.setState({mouseButton: event.button})
-  }
-
   handleMouseUp(event) {
+    // document.exitPointerLock();
     this.setState({mouseButton: null});
   }
 
+  handleMouseLeave(event) {
+    const rect = this.selector.getBoundingClientRect();
+    const x = rect.left - this.selector.offsetLeft;
+    const y = rect.top - this.selector.offsetTop;
+    const xInBounds = (x < this.props.size.width) && (x > 0);
+    const yInBounds = (y < this.props.size.height) && (y > 0);
+
+    if (!xInBounds || !yInBounds) {
+      this.setState({mouseButton: null});
+    }
+  }
+ 
   updateSaturationLightness() {
     const saturation = this.getSaturationFromSelectorPosition();
     const lightness = this.getLightnessFromSelectorPosition();
@@ -266,7 +281,8 @@ class SaturationLightnessSelectorMap extends React.Component {
           style={style.selector}
           onMouseDown={this.handleMouseDown}
           onMouseMove={this.handleMouseMove}
-          onMouseUp={this.handleMouseUp} />
+          onMouseUp={this.handleMouseUp}
+          onMouseLeave={this.handleMouseLeave} />
       </div>
     );
   }
