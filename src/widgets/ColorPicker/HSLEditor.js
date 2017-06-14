@@ -107,8 +107,8 @@ class HueSliderBar extends React.Component {
     this.props.onHueChange(hsl);
   }
 
-  shouldComponentUpdate(newProps) {
-    return this.props.color !== newProps.color;
+  shouldComponentUpdate(nextProps) {
+    return (this.state.position.y < this.props.size.height);
   }
 
   render() {
@@ -250,6 +250,10 @@ class SaturationLightnessSelectorMap extends React.Component {
     hsl.l = lightness;
 
     this.props.onSaturationLightnessChange(hsl);
+  }
+
+  shouldComponentUpdate(newProps) {
+    return this.props.color !== newProps.color;
   }
 
   render() {
