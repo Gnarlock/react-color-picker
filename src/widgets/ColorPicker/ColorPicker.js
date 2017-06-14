@@ -9,7 +9,7 @@ export default class ColorPicker extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      color: Color.rgb([255, 0, 0])
+      color: Color.rgb({r: 255, g: 0, b: 0})
     }
 
     this.handleColorChange = this.handleColorChange.bind(this);
@@ -22,9 +22,26 @@ export default class ColorPicker extends React.Component {
 	render() {
 		return (
       <div className="ColorPicker">
-        <HSLEditor color={this.state.color} onColorChange={this.handleColorChange} size={{height: 255, width: 255}} />
-        <RGBEditor color={this.state.color} onColorChange={this.handleColorChange} />
+        {this.props.displayHSL &&
+          <HSLEditor
+            size={this.props.HSLEditorSize}
+            color={this.state.color}
+            onColorChange={this.handleColorChange} />
+        }
+        {this.props.displayRGB &&
+          <RGBEditor
+            size={this.props.RGBEditorSize}
+            color={this.state.color}
+            onColorChange={this.handleColorChange} />
+        }
       </div>
     );
 	}
 }
+
+ColorPicker.defaultProps = {
+  displayHSL: true,
+  displayRGB: true,
+  HSLEditorSize: {height: 255, width: 255},
+  RGBEditorSize: {height: 255, width: 255}
+};
