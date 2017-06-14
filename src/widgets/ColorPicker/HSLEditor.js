@@ -107,6 +107,10 @@ class HueSliderBar extends React.Component {
     this.props.onHueChange(hsl);
   }
 
+  shouldComponentUpdate(newProps) {
+    return this.props.color !== newProps.color;
+  }
+
   render() {
     const position = this.getSliderPositionFromColor();
     const transformation = `translate(${position.x}px, ${position.y}px)`;
@@ -199,6 +203,7 @@ class SaturationLightnessSelectorMap extends React.Component {
     this.setState({mouseButton: event.button})
   }
 
+  // This could probably be optimized
   handleMouseMove(event) {
     event.preventDefault();
     
