@@ -1,56 +1,57 @@
 .RGBEditor {
   display: flex;
   flex-direction: column;
-	width: 128px;
   height: 256px;
   margin: 0 5px;
   user-select: none;
+  width: 128px;
 
   .Swatch {
+    align-self: center;
+    border: 1px solid #3c3c3c;
     display: flex;
-    align-self: flex-end;
     height: 40%;
-    width: 100%;
     margin-bottom: 8px;
-    box-sizing: border-box;
-    border: 2px inset lightgrey;
+    width: 100%;
   }
 
   .ColorInputs {
+    background-color: #2e2e2e;
+    border: 1px solid #3c3c3c;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    width: auto;
     height: 60%;
+    justify-content: space-between;
     padding: 10px 10px;
-    background-color: rgb(60,60,60);
+    user-select: none;
+    width: auto;
 
     .ColorInput {
+      color: #bbb;
       display: flex;
       flex-direction: row;
       font-size: 12px;
-      color: rgb(200,200,200);
 
       input {
-        display: flex;
-        background: rgb(100,100,100);
+        background-color: #4c4c4c;
         border: none;
         border-radius: 3px;
         color: rgb(200,200,200);
-        width: 80%;
+        display: flex;
         padding: 5px;
-
+        width: 80%;
+        
         &:focus {
           outline-width: 0;
         }
       }
 
       span {
-        display: flex;
         align-items: center;
-        width: 20%;
         cursor: default;
+        display: flex;
         user-select: none;
+        width: 20%;
       }
     }
   }
