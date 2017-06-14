@@ -6,7 +6,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <ColorPicker />
+        <ColorPicker displayHSL={true} displayRGB={true} />
       </div>
     );
   }
