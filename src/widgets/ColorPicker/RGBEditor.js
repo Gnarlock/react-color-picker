@@ -38,11 +38,16 @@ class ColorInput extends React.Component {
     this.props.onInputChange(this, sanitizedInputValue);
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.input.value = "";
+  }
+
   render() {
     return (
       <div className="ColorInput">
         <span>{this.props.label}</span>
         <input
+          ref={(input) => {this.input = input}}
           onChange={this.handleInputChange}
           value={this.props.value}
           type="text"
@@ -101,9 +106,19 @@ class ColorInputs extends React.Component {
 
 export default class RGBEditor extends Component {
   render() {
+    const style = {
+      RGBEditor: {
+        height: this.props.size.height,
+        width: this.props.size.width
+      },
+      Swatch: {
+        backgroundColor: this.props.color.string()
+      }
+    }
+
     return (
-      <div className="RGBEditor">
-        <div className="Swatch" style={{backgroundColor: this.props.color.string()}} />
+      <div className="RGBEditor" style={style.RGBEditor}>
+        <div className="Swatch" style={style.Swatch} />
         <ColorInputs onColorInputChange={this.props.onColorChange} color={this.props.color} />
       </div>
     );

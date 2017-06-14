@@ -43,5 +43,5 @@ ColorPicker.defaultProps = {
   displayHSL: true,
   displayRGB: true,
   HSLEditorSize: {height: 255, width: 255},
-  RGBEditorSize: {height: 255, width: 255}
+  RGBEditorSize: {height: 255, width: 127}
 };
