@@ -67,7 +67,7 @@ class HueSliderBar extends React.Component {
     const rect = this.slider.getBoundingClientRect();
     const x = rect.left - this.slider.offsetLeft;
     const y = rect.top - this.slider.offsetTop;
-    const xInBounds = (x < this.props.size.width) && (x > 0);
+    const xInBounds = (x < this.props.size.width) && (x >= 0);
     const yInBounds = (y < this.props.size.height) && (y > 0);
 
     if (!xInBounds || !yInBounds) {
@@ -132,6 +132,7 @@ class HueSliderBar extends React.Component {
           onMouseDown={this.handleMouseDown}
           onMouseMove={this.handleMouseMove}
           onMouseUp={this.handleMouseUp}
+          onMouseLeave={this.handleMouseLeave}
           onWheel={this.handleWheel} />
         <div
           className="Slider"
