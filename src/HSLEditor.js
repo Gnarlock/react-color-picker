@@ -247,7 +247,7 @@ class SaturationLightnessSelectorMap extends React.Component {
     const color = Color(hsl);
     const backgroundColor = color.rgb().string();
 
-    const filter = "invert(" + this.props.color.lightness() + "%)";
+    const filter = "invert(" + this.props.color.lightness()/2 + "%)";
 
     const position = this.getSelectorPositionFromColor();
     const transformation = `translate(${position.x}px, ${position.y}px)`;
