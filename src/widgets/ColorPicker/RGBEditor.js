@@ -26,7 +26,7 @@ class ColorInput extends React.Component {
     const inputValue = event.target.value;
 
     let sanitizedInputValue = null;
-    if (this.props.type === "rgb" && isValidInput(inputValue, ColorUtil.rgbDecimalRegex)) {
+    if (this.props.type === "rgb" && isValidInput(inputValue, ColorUtil.rgbDecimalRegex) && inputValue <= 255) {
       sanitizedInputValue = sanitizeRGBInput(inputValue);
     } else if (this.props.type === "hex" && isValidInput(inputValue, ColorUtil.rgbHexRegex)) {
       sanitizedInputValue = sanitizeHexInput(inputValue);
