@@ -28,15 +28,13 @@
     }
 
     .Selector {
-      height: 16px;
-      width: 16px;
-      border-radius: 50px;
+      height: 8px;
+      width: 8px;
+      border-radius: 8px;
       position: absolute;
       z-index: 1;
       user-select: none;
-      box-sizing: border-box;
       border: 3px solid white;
-      padding:5px;
       margin: -8px;
     }
   }
@@ -53,7 +51,7 @@
       cursor: ns-resize;
       user-select: none;
       box-sizing: border-box;
-      border: 3px outset white;
+      border: 3px solid white;
     }
 
     .Bar {

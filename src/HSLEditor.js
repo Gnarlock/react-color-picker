@@ -1,41 +1,40 @@
 import React from 'react';
-import Draggable from 'react-draggable';
 import './styles/HSLEditor.css';
 
 const Color = require('color');
 
+// TODO: Fix bug where slider at max value resets itself to 0 position
 class HueSliderBar extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      position: this.getSliderPositionFromColor()
+      position: this.getSliderPositionFromColor(),
+      mouseButton: null
     }
 
-    this.getSliderPositionFromColor = this.getSliderPositionFromColor.bind(this);
     this.getHueFromSliderPosition = this.getHueFromSliderPosition.bind(this);
-
+    this.getSliderPositionFromColor = this.getSliderPositionFromColor.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleMouseUp = this.handleMouseUp.bind(this);
+    this.handleMouseLeave = this.handleMouseLeave.bind(this);
     this.handleWheel = this.handleWheel.bind(this);
-    this.handleDrag = this.handleDrag.bind(this);
-
     this.updateSliderPosition = this.updateSliderPosition.bind(this);
     this.updateHue = this.updateHue.bind(this);
+  }
+
+  getHueFromSliderPosition() {
+    return Math.round(360 * Math.max(0, Math.min(this.props.size.height, this.state.position.y)) / this.props.size.height);
   }
 
   getSliderPositionFromColor() {
     const x = 0;
     const y = Math.round(this.props.size.height * (this.props.color.hue() / 360));
-    const position = {
-      x: x,
-      y: y
-    }
+    const position = {x: x, y: y}
 
     return position;
-  }
-
-  getHueFromSliderPosition() {
-    return Math.round(360 * Math.max(0, Math.min(this.props.size.height, this.state.position.y)) / this.props.size.height);
   }
 
   handleClick(event) {
@@ -44,13 +43,36 @@ class HueSliderBar extends React.Component {
 
     this.updateSliderPosition(x, y);
   }
+  handleMouseDown(event) {
+    this.setState({mouseButton: event.button})
+  }
 
-  handleDrag(event) {
-    const position = this.slider.getBoundingClientRect();
-    const x = this.state.position.x;
-    const y = Math.round(position.top - this.slider.offsetTop);
+  handleMouseMove(event) {
+    event.preventDefault();
+    
+    if (this.state.mouseButton === 0) {
+      const rect = this.slider.getBoundingClientRect();
+      const x = this.state.position.x;
+      const y = event.pageY - this.slider.offsetTop - (rect.height / 2);
 
-    this.updateSliderPosition(x, y);
+      this.updateSliderPosition(x, y);
+    }
+  }
+
+  handleMouseUp(event) {
+    this.setState({mouseButton: null});
+  }
+
+  handleMouseLeave(event) {
+    const rect = this.slider.getBoundingClientRect();
+    const x = rect.left - this.slider.offsetLeft;
+    const y = rect.top - this.slider.offsetTop;
+    const xInBounds = (x < this.props.size.width) && (x > 0);
+    const yInBounds = (y < this.props.size.height) && (y > 0);
+
+    if (!xInBounds || !yInBounds) {
+      this.setState({mouseButton: null});
+    }
   }
 
   handleWheel(event) {
@@ -60,19 +82,18 @@ class HueSliderBar extends React.Component {
     let y = this.state.position.y;
 
     if (event.deltaY < 0) {
-      y = Math.max(0, (y - 1));
+      // Don't have negative y position
+      y = Math.max(0, (y - 5));
     } else if (event.deltaY > 0) {
-      y = Math.min(this.props.size.height, (y + 1));
+      // Don't have y greater than height of slider
+      y = Math.min(this.props.size.height, (y + 5));
     }
 
     this.updateSliderPosition(x, y);
   }
 
   updateSliderPosition(x, y) {
-    const position = {
-      x: x,
-      y: y
-    };
+    const position = {x: x, y: y};
 
     this.setState({position: position}, this.updateHue);
   }
@@ -87,14 +108,18 @@ class HueSliderBar extends React.Component {
   }
 
   render() {
+    const position = this.getSliderPositionFromColor();
+    const transformation = `translate(${position.x}px, ${position.y}px)`;
+
     const style = {
       bar: {
         height: this.props.size.height,
         width: 30
+      },
+      slider: {
+        transform: transformation
       }
     }
-
-    const position = this.getSliderPositionFromColor();
 
     return (
       <div
@@ -104,17 +129,19 @@ class HueSliderBar extends React.Component {
           ref={(bar) => {this.bar = bar}}
           style={style.bar}
           onClick={this.handleClick}
+          onMouseDown={this.handleMouseDown}
+          onMouseMove={this.handleMouseMove}
+          onMouseUp={this.handleMouseUp}
           onWheel={this.handleWheel} />
-        <Draggable 
-          axis="y"
-          handle=".Slider"
-          bounds={{top: 0, bottom: this.props.size.height}}
-          position={position}
-          onDrag={this.handleDrag} >
-          <div
-            className="Slider"
-            ref={(slider) => {this.slider = slider}} />
-        </Draggable>
+        <div
+          className="Slider"
+          ref={(slider) => {this.slider = slider}}
+          style={style.slider}
+          onMouseDown={this.handleMouseDown}
+          onMouseMove={this.handleMouseMove}
+          onMouseUp={this.handleMouseUp}
+          onMouseLeave={this.handleMouseLeave}
+          onWheel={this.handleWheel} />
       </div>
     );
   }
@@ -128,20 +155,24 @@ class SaturationLightnessSelectorMap extends React.Component {
       mouseButton: null
     }
 
-    this.getSelectorPositionFromColor = this.getSelectorPositionFromColor.bind(this);
     this.getSaturationFromSelectorPosition = this.getSaturationFromSelectorPosition.bind(this);
     this.getLightnessFromSelectorPosition = this.getLightnessFromSelectorPosition.bind(this);
     this.getSelectorPositionFromColor = this.getSelectorPositionFromColor.bind(this);
-
     this.handleClick = this.handleClick.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
-    this.handleDrag = this.handleDrag.bind(this);
-
-    this.updateSaturationLightness = this.updateSaturationLightness.bind(this);
     this.updateSelectorPosition = this.updateSelectorPosition.bind(this);
+    this.updateSaturationLightness = this.updateSaturationLightness.bind(this);
+  }
+
+  getSaturationFromSelectorPosition() {
+    return Math.round(100 * (this.state.position.x / this.props.size.width));
+  }
+
+  getLightnessFromSelectorPosition() {
+    return Math.round(100 * ((this.props.size.height - this.state.position.y) / this.props.size.height));
   }
 
   getSelectorPositionFromColor() {
@@ -155,36 +186,15 @@ class SaturationLightnessSelectorMap extends React.Component {
     return position;
   }
 
-  getLightnessFromSelectorPosition() {
-    return Math.round(100 * ((this.props.size.height - this.state.position.y) / this.props.size.height));
-  }
-
-  getSaturationFromSelectorPosition() {
-    return Math.round(100 * (this.state.position.x / this.props.size.width));
-  }
-
-  handleDrag(event) {
-    event.preventDefault();
-
+  handleClick(event) {
     const rect = this.selector.getBoundingClientRect();
-    const x = rect.left - this.selector.offsetLeft;
-    const y = rect.top - this.selector.offsetTop;
+    const x = event.pageX - this.selector.offsetLeft - (rect.width / 2);
+    const y = event.pageY - this.selector.offsetTop - (rect.height / 2);
 
     this.updateSelectorPosition(x, y);
   }
 
-  handleClick(event) {
-    if (event.button === 0) {
-      const rect = this.selector.getBoundingClientRect();
-      const x = event.pageX - this.selector.offsetLeft - (rect.width / 2);
-      const y = event.pageY - this.selector.offsetTop - (rect.height / 2);
-
-      this.updateSelectorPosition(x, y);
-    }
-  }
-
   handleMouseDown(event) {
-    // this.selector.requestPointerLock();
     this.setState({mouseButton: event.button})
   }
 
@@ -201,7 +211,6 @@ class SaturationLightnessSelectorMap extends React.Component {
   }
 
   handleMouseUp(event) {
-    // document.exitPointerLock();
     this.setState({mouseButton: null});
   }
 
@@ -216,7 +225,16 @@ class SaturationLightnessSelectorMap extends React.Component {
       this.setState({mouseButton: null});
     }
   }
- 
+
+  updateSelectorPosition(x, y) {
+    const position = {
+      x: Math.max(0, Math.min(this.props.size.width, x)),
+      y: Math.max(0, Math.min(this.props.size.height, y))
+    };
+
+    this.setState({position: position}, this.updateSaturationLightness);
+  }
+
   updateSaturationLightness() {
     const saturation = this.getSaturationFromSelectorPosition();
     const lightness = this.getLightnessFromSelectorPosition();
@@ -226,15 +244,6 @@ class SaturationLightnessSelectorMap extends React.Component {
     hsl.l = lightness;
 
     this.props.onSaturationLightnessChange(hsl);
-  }
-
-  updateSelectorPosition(x, y) {
-    const position = {
-      x: Math.max(0, Math.min(this.props.size.width, x)),
-      y: Math.max(0, Math.min(this.props.size.height, y))
-    };
-
-    this.setState({position: position}, this.updateSaturationLightness);
   }
 
   render() {
