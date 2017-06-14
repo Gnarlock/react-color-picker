@@ -22,7 +22,7 @@ export default class ColorPicker extends React.Component {
 	render() {
 		return (
       <div className="ColorPicker">
-        <HSLEditor color={this.state.color} onColorChange={this.handleColorChange} size={{height: 510, width: 510}} />
+        <HSLEditor color={this.state.color} onColorChange={this.handleColorChange} size={{height: 255, width: 255}} />
         <RGBEditor color={this.state.color} onColorChange={this.handleColorChange} />
       </div>
     );
