@@ -7,13 +7,8 @@ var ColorUtil = require('../../utils/color');
 class ColorInput extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      focused: false
-    }
 
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleFocus = this.handleFocus.bind(this);
-    this.handleBlur = this.handleBlur.bind(this);
   }
 
   handleInputChange(event) {
@@ -43,23 +38,11 @@ class ColorInput extends React.Component {
     this.props.onInputChange(this, sanitizedInputValue);
   }
 
-  handleFocus(event) {
-    this.setState({focused: true});
-  }
-
-  handleBlur(event) {
-    this.setState({focused: false});
-    if (this.props.type === "rgb") {
-    }
-  }
-
   render() {
     return (
       <div className="ColorInput">
         <span>{this.props.label}</span>
         <input
-          onFocus={this.handleFocus}
-          onBlur={this.handleBlur}
           onChange={this.handleInputChange}
           value={this.props.value}
           type="text"
