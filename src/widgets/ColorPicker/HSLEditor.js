@@ -1,5 +1,5 @@
 import React from 'react';
-import './styles/HSLEditor.css';
+import '../../styles/HSLEditor.css';
 
 const Color = require('color');
 

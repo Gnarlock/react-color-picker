@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './styles/App.css';
-import ColorPicker from './ColorPicker'
+import ColorPicker from './widgets/ColorPicker/ColorPicker'
 
 class App extends Component {
   render() {

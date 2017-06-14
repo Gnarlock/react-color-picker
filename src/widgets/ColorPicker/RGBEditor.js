@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import './styles/RGBEditor.css';
+import '../../styles/RGBEditor.css';
 
 var HexRgb = require('hex-rgb');
-var ColorUtil = require('./utils/color');
+var ColorUtil = require('../../utils/color');
 
 class ColorInput extends React.Component {
   constructor(props) {

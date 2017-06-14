@@ -1,14 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
 import HSLEditor from './HSLEditor';
 import RGBEditor from './RGBEditor';
-import './styles/ColorPicker.css';
+import '../../styles/ColorPicker.css';
 
 const Color = require('color');
 
-export default class ColorPicker extends Component {
+export default class ColorPicker extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       color: Color.rgb([255, 0, 0])
     }
@@ -17,9 +16,7 @@ export default class ColorPicker extends Component {
   }
 
   handleColorChange(color) {
-    this.setState({
-      color: Color(color)
-    });
+    this.setState({color: Color(color)});
   }
 
 	render() {
