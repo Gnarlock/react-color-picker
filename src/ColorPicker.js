@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import HSLEditor from './HSLEditor';
-import ColorInfo from './ColorInfo';
+import RGBEditor from './RGBEditor';
 import './styles/ColorPicker.css';
 
 const Color = require('color');
@@ -26,7 +26,7 @@ export default class ColorPicker extends Component {
 		return (
       <div className="ColorPicker">
         <HSLEditor color={this.state.color} onColorChange={this.handleColorChange} size={{height: 510, width: 510}} />
-        <ColorInfo color={this.state.color} onColorChange={this.handleColorChange} />
+        <RGBEditor color={this.state.color} onColorChange={this.handleColorChange} />
       </div>
     );
 	}
