@@ -12,6 +12,8 @@
     height: 40%;
     width: 100%;
     margin-bottom: 8px;
+    box-sizing: border-box;
+    border: 2px inset lightgrey;
   }
 
   .ColorInputs {
