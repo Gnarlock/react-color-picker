@@ -1,20 +1,55 @@
 .App {
   display: inline-block;
-  border-right: 2px ridge #3c3c3c;
-  border-left: 2px groove #3c3c3c;
+  border-right: 2px solid #3c3c3c;
+  border-left: 2px solid #3c3c3c;
 
   .TopControlBar {
-  	background-color: #282828;
-  	border-bottom: 2px groove #3c3c3c;
-  	border-top: 2px groove #3c3c3c;
+    align-items: center;
+  	background-color: #111;
+  	border-bottom: 1px solid #3c3c3c;
+  	border-top: 1px solid #3c3c3c;
+    display: flex;
   	height: 40px;
+    justify-content: space-between;
+
+    span {
+      color: darkgrey;
+      display: flex;
+      font-weight: bold;
+      margin: 0 10px;
+      text-transform: uppercase;
+    }
+
+    button {
+      background-color: transparent;
+      border: none;
+      color: darkgrey;
+      display: flex;
+      font-family: monospace;
+      font-weight: bold;
+      font-size: 1.2em;
+      margin: 0 10px;
+    }
   }
 
   .BottomControlBar {
+    align-items: center;
   	background-color: #282828;
-  	border-top: 2px ridge #3c3c3c;
-  	border-bottom: 2px ridge #3c3c3c;
+  	border-top: 1px solid #3c3c3c;
+  	border-bottom: 1px solid #3c3c3c;
+    display: flex;
   	height: 40px;
+    justify-content: flex-end;
+
+    button {
+      background-color: #ff4400;
+      border: 1px solid red;
+      color: white;
+      display: flex;
+      font-weight: bold;
+      height: 60%;
+      margin: 0 10px;
+      text-transform: uppercase;
+    }
   }
 }
-
