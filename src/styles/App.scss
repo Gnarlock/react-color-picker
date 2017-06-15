@@ -1,12 +1,10 @@
 .App {
   display: inline-block;
-  border-right: 2px solid #3c3c3c;
-  border-left: 2px solid #3c3c3c;
+  border: 1px solid #3c3c3c;
 
   .TopControlBar {
     align-items: center;
   	background-color: #1a1a1a;
-  	border-bottom: 1px solid #3c3c3c;
   	border-top: 1px solid #3c3c3c;
     display: flex;
   	height: 40px;
@@ -36,7 +34,6 @@
     align-items: center;
   	background-color: #2D2D2D;
   	border-top: 1px solid #3c3c3c;
-  	border-bottom: 1px solid #3c3c3c;
     display: flex;
   	height: 40px;
     justify-content: flex-end;
