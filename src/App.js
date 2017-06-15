@@ -17,7 +17,6 @@ export default class App extends Component {
 
         { this.props.displayControls &&
             <div className="BottomControlBar" >
-              <button>Cancel</button>
               <button>Submit</button>
             </div>
         }
